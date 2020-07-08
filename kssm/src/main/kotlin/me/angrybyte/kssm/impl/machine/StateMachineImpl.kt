@@ -48,16 +48,16 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
 
   // State and flow setup
 
-  private val stateMappings = mutableSetOf<StateMapping<*, *, *>>()
+  internal val stateMappings = mutableSetOf<StateMapping<*, *, *>>()
   private var useStrictMapping = true
 
-  private val errorHandlers = mutableSetOf<ErrorHandler>() // static observing
-  private val errorFlow = MutableStateFlow<Throwable>( // reactive observing
-    IncubationException
-  )
-  override val errors: Flow<Throwable> = errorFlow // public flow access
+  override val currentState: State<*>
+    get() = transitionFlow.value.newState
 
-  private val transitionHandlers = mutableSetOf<TransitionHandler>() // static observing
+  override val lastAction: Action<*>
+    get() = transitionFlow.value.action
+
+  internal val transitionHandlers = mutableSetOf<TransitionHandler>() // static observing
   private val transitionFlow: MutableStateFlow<Transition<*, *, *>> = MutableStateFlow( // reactive observing
     Transition(
       oldState = None,
@@ -67,11 +67,11 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
   )
   override val transitions: Flow<Transition<*, *, *>> = transitionFlow // public flow access
 
-  override val currentState: State<*>
-    get() = transitionFlow.value.newState
-
-  override val lastAction: Action<*>
-    get() = transitionFlow.value.action
+  internal val errorHandlers = mutableSetOf<ErrorHandler>() // static observing
+  private val errorFlow = MutableStateFlow<Throwable>( // reactive observing
+    IncubationException
+  )
+  override val errors: Flow<Throwable> = errorFlow // public flow access
 
   // Configuration
 
@@ -85,7 +85,7 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
       .firstOrNull { existing ->
         areEqual(existing.source, mapping.source) &&
           areEqual(existing.action, mapping.action) &&
-          areEqual(existing.destination, mapping.destination)
+          !areEqual(existing.destination, mapping.destination)
       }
       ?.let { conflict ->
         error("Conflict detected!\nExisting: $conflict\nYours: $mapping")
@@ -97,7 +97,7 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
   @Synchronized
   @Throws(IncubationPassedException::class)
   override fun <T> setInitialState(state: State<T>) {
-    requireIncubationFor("Adding handlers")
+    requireIncubationFor("Setting initial state")
 
     transitionFlow.value = Transition(
       oldState = None,
@@ -222,7 +222,6 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
   }
 
   @Synchronized
-  @ExperimentalStdlibApi
   override fun finish() {
     if (areEqual(currentState, Dead)) return
     val deathTransition = transition(Death)
@@ -231,7 +230,7 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
       deathTransition.join()
       errorHandlers.clear()
       transitionHandlers.clear()
-      (coroutineContext[CoroutineDispatcher.Key] as? ExecutorCoroutineDispatcher)?.close()
+      (defaultDispatcher as? ExecutorCoroutineDispatcher)?.close()
       parentJob.cancel()
     }
   }

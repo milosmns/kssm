@@ -2,7 +2,7 @@ package me.angrybyte.kssm.impl.action
 
 import me.angrybyte.kssm.api.Action
 
-data class NamedAction(
+internal data class NamedAction(
   override val name: String
 ) : Action<Nothing> {
 

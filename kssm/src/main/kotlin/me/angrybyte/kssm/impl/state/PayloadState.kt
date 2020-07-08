@@ -2,7 +2,7 @@ package me.angrybyte.kssm.impl.state
 
 import me.angrybyte.kssm.api.State
 
-data class PayloadState<T>(
+internal data class PayloadState<T>(
   override val name: String,
   override val payload: T?
 ) : State<T> {

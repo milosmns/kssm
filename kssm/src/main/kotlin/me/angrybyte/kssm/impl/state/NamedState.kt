@@ -2,7 +2,7 @@ package me.angrybyte.kssm.impl.state
 
 import me.angrybyte.kssm.api.State
 
-data class NamedState(
+internal data class NamedState(
   override val name: String
 ) : State<Nothing> {
 

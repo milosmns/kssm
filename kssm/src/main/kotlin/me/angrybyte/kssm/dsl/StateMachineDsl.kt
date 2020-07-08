@@ -52,3 +52,6 @@ class StateMachineDsl(
 @ExperimentalCoroutinesApi
 fun stateMachine(initialize: StateMachineDsl.() -> Unit): StateMachine =
   StateMachineDsl(StateMachineImpl()).apply(initialize).instance
+
+@ExperimentalCoroutinesApi
+fun stateMachine(): StateMachine = StateMachineImpl()
