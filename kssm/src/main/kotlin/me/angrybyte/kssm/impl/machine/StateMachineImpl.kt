@@ -9,6 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
@@ -29,6 +30,21 @@ import me.angrybyte.kssm.impl.state.CoreState.Dead
 import me.angrybyte.kssm.impl.state.CoreState.Incubating
 import me.angrybyte.kssm.impl.state.CoreState.None
 
+/**
+ * An opinionated implementation of the [StateMachine] interface.
+ * This implementation manages its own state, threading, event reporting and error handling.
+ *
+ * The main mechanism used for state storing and reporting under-the-hood is Kotlin's [StateFlow],
+ * and the state machine runs in its own coroutine scope from the creation.
+ *
+ * Never use this class to create new state machine instances. Instead, use the DSL:
+ *
+ * ```kotlin
+ * val sm = stateMachine {
+ *   // initialization
+ * }
+ * ```
+ */
 @ExperimentalCoroutinesApi
 internal class StateMachineImpl : StateMachine, CoroutineScope {
 
