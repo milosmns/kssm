@@ -162,7 +162,7 @@ internal class StateMachineImplTest {
       dispatchToTest()
     }.test()
 
-    shouldThrow(IllegalStateException::class) {
+    shouldThrow(IllegalArgumentException::class) {
       sm.addStateMapping(AB moves A to C)
     }
   }

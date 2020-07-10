@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.angrybyte.kssm.api.Action
@@ -92,7 +93,7 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
   // Configuration
 
   @Synchronized
-  @Throws(IncubationPassedException::class, IllegalStateException::class)
+  @Throws(IncubationPassedException::class, IllegalArgumentException::class)
   override fun <S, A, D> addStateMapping(mapping: StateMapping<S, A, D>) {
     requireIncubationFor("Adding mappings")
 
@@ -104,7 +105,7 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
           !areEqual(existing.destination, mapping.destination)
       }
       ?.let { conflict ->
-        error("Conflict detected!\nExisting: $conflict\nYours: $mapping")
+        throw IllegalArgumentException("Conflict detected!\nExisting: $conflict\nYours: $mapping")
       }
 
     stateMappings += mapping
@@ -174,6 +175,7 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
 
   @Synchronized
   override fun <T> transition(action: Action<T>): Job = launch(defaultDispatcher) launch@{
+    if (!isActive) return@launch
     if (areEqual(currentState, Dead)) {
       val error = IllegalStateException("State machine is dead, create a new instance")
       errorFlow.value = error
@@ -183,6 +185,7 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
       return@launch
     }
 
+    if (!isActive) return@launch
     if (areEqual(action, Birth)) {
       val error = IllegalStateException("State machine can't be reborn, create a new instance")
       errorFlow.value = error
@@ -193,6 +196,7 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
     }
 
     // treat death exceptionally
+    if (!isActive) return@launch
     if (areEqual(action, Death)) {
       val transition = Transition(oldState = currentState, action = Death, newState = Dead)
       transitionFlow.value = transition
@@ -203,6 +207,7 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
     }
 
     // try to find a mapping
+    if (!isActive) return@launch
     stateMappings
       .firstOrNull {
         areEqual(it.source, currentState) && areEqual(it.action, action)
@@ -218,6 +223,7 @@ internal class StateMachineImpl : StateMachine, CoroutineScope {
       }
 
     // no mapping found
+    if (!isActive) return@launch
     val error = NoMappingException(currentState, action)
     errorFlow.value = error
     withContext(errorsDispatcher) {
