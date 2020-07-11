@@ -1,6 +1,9 @@
 plugins {
   id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+  id "org.jmailen.kotlinter" version '2.4.1'
 }
+
+apply plugin: "org.jmailen.kotlinter"
 
 // Maven Coordinates
 
@@ -41,4 +44,15 @@ compileKotlin {
 
 compileTestKotlin {
   kotlinOptions.jvmTarget = "1.8"
+}
+
+// Linter config
+
+kotlinter {
+  ignoreFailures = false
+  indentSize = 2
+  reporters = ['checkstyle', 'plain']
+  experimentalRules = false
+  disabledRules = ['no-blank-line-before-rbrace', 'final-newline']
+  fileBatchSize = 30
 }
