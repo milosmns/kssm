@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>requirePayload - kssm</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">kssm</a>&nbsp;/&nbsp;<a href="index.html">me.angrybyte.kssm.api.data</a>&nbsp;/&nbsp;<a href="./require-payload.html">requirePayload</a><br/>
+<br/>
+<h1>requirePayload</h1>
+<a name="me.angrybyte.kssm.api.data$requirePayload(me.angrybyte.kssm.api.Action((me.angrybyte.kssm.api.data.requirePayload.T)))"></a>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="keyword">reified</span>&nbsp;<span class="identifier">T</span><span class="symbol">&gt;</span> <a href="../me.angrybyte.kssm.api/-action/index.html"><span class="identifier">Action</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">requirePayload</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">T</span></code>
+<p>Force casts the payload object into a non-<code>null</code> value of type <a href="require-payload.html#T">T</a> and returns it.
+If there was no payload set, this call will throw. If you use the wrong type <a href="require-payload.html#T">T</a>, this will throw.</p>
+<h3>Parameters</h3>
+<p><a name="T"></a>
+<code>T</code> - the type of payload this action carries</p>
+<h3>Exceptions</h3>
+<p><a name="ClassCastException"></a>
+<code>ClassCastException</code> - when payload is of a different type from <a href="require-payload.html#T">T</a></p>
+<p><a name="KotlinNullPointerException"></a>
+<code>KotlinNullPointerException</code> - when there's no payload at all (<code>null</code> case)</p>
+<a name="me.angrybyte.kssm.api.data$requirePayload(me.angrybyte.kssm.api.State((me.angrybyte.kssm.api.data.requirePayload.T)))"></a>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="keyword">reified</span>&nbsp;<span class="identifier">T</span><span class="symbol">&gt;</span> <a href="../me.angrybyte.kssm.api/-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">requirePayload</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">T</span></code>
+<p>Force casts the payload object into a non-<code>null</code> value of type <a href="require-payload.html#T">T</a> and returns it.
+If there was no payload set, this call will throw. If you use the wrong type <a href="require-payload.html#T">T</a>, this will throw.</p>
+<h3>Parameters</h3>
+<p><a name="T"></a>
+<code>T</code> - the type of payload this state carries</p>
+<h3>Exceptions</h3>
+<p><a name="ClassCastException"></a>
+<code>ClassCastException</code> - when payload is of a different type from <a href="require-payload.html#T">T</a></p>
+<p><a name="KotlinNullPointerException"></a>
+<code>KotlinNullPointerException</code> - when there's no payload at all (<code>null</code> case)</p>
+</BODY>
+</HTML>

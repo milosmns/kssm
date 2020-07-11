@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>State - kssm</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">kssm</a>&nbsp;/&nbsp;<a href="../index.html">me.angrybyte.kssm.api</a>&nbsp;/&nbsp;<a href="./index.html">State</a><br/>
+<br/>
+<h1>State</h1>
+<code><span class="keyword">interface </span><span class="identifier">State</span><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">T</span><span class="symbol">&gt;</span></code>
+<p>A fundamental building block of a <a href="../-state-machine/index.html">StateMachine</a>.
+In <a href="https://i.imgur.com/rhDX2ux.png">this example</a> that would be <code>State A</code>, <code>State B</code> and <code>State C</code>.</p>
+<p>Formally, we consider states to be static checkpoints for the state machine to go through.
+A state machine can have only one 'current' state, and it can transition from it using an action (also called input).</p>
+<p>Using the current API, each state must have a unique name. Apart from having a name, each state can carry a
+single object (immutable payload) with it. The payload is kept in-memory as long as the state is in-memory.</p>
+<p>The easiest way to create new state instances is using the DSL:</p>
+<pre><code class="lang-kotlin">val named = namedState("StateA")
+val heavy = payloadState("WaitingFor20Seconds", 20)
+</code></pre>
+<p>If you have a single set of static states, you could use <a href="../../me.angrybyte.kssm.impl.state/-singleton-state/index.html">SingletonState</a>s, like so:</p>
+<pre><code class="lang-kotlin">sealed class VendingMachineState : SingletonState() {
+  object WaitingForSelection : VendingMachineState()
+  object WaitingForMoney : VendingMachineState()
+  object MovingDrink : VendingMachineState()
+  object PayingBackChange : VendingMachineState()
+}
+</code></pre>
+<h3>Parameters</h3>
+<p><a name="T"></a>
+<code>T</code> - the state's payload type</p>
+<p><strong>See Also</strong><br/>
+<p><a href="#">NamedState</a></p>
+<p><a href="#">PayloadState</a></p>
+<p><a href="../../me.angrybyte.kssm.impl.state/-singleton-state/index.html">SingletonState</a></p>
+<p><a href="#">CoreState</a></p>
+<p><a href="../-action/index.html">Action</a></p>
+<p><a href="../-state-machine/index.html">StateMachine</a></p>
+</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="name.html">name</a></h4>
+</td>
+<td>
+<p>A unique name associated with this state</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">name</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="payload.html">payload</a></h4>
+</td>
+<td>
+<p>Optional payload that this state will carry in-memory</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">payload</span><span class="symbol">: </span><span class="identifier">T</span><span class="symbol">?</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../me.angrybyte.kssm.api.data/require-payload.html">requirePayload</a></h4>
+</td>
+<td>
+<p>Force casts the payload object into a non-<code>null</code> value of type <a href="../../me.angrybyte.kssm.api.data/require-payload.html#T">T</a> and returns it.
+If there was no payload set, this call will throw. If you use the wrong type <a href="../../me.angrybyte.kssm.api.data/require-payload.html#T">T</a>, this will throw.</p>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <a href="./index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">requirePayload</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">T</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../me.angrybyte.kssm.impl.state/-singleton-state/index.html">SingletonState</a></h4>
+</td>
+<td>
+<p>A simple <a href="./index.html">State</a> implementation that uses the inheritor's class name as state name.
+It doesn't carry any payload and it's meant to be used with <code>object</code>s. For example:</p>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">SingletonState</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing/index.html"><span class="identifier">Nothing</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

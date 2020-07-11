@@ -1,0 +1,17 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>StateMachine.finish - kssm</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">kssm</a>&nbsp;/&nbsp;<a href="../index.html">me.angrybyte.kssm.api</a>&nbsp;/&nbsp;<a href="index.html">StateMachine</a>&nbsp;/&nbsp;<a href="./finish.html">finish</a><br/>
+<br/>
+<h1>finish</h1>
+<a name="me.angrybyte.kssm.api.StateMachine$finish()"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">finish</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Stops all internal processing and removes all transition and error handlers and observables. Also invalidates all
+internal threading mechanisms, so nothing else can be executed on this state machine.</p>
+<p>After cleaning up, the state machine's state will be <a href="#">CoreState.Dead</a> and the last action will be <a href="#">CoreAction.Death</a>.</p>
+</BODY>
+</HTML>

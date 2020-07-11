@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>StateMachineDsl - kssm</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">kssm</a>&nbsp;/&nbsp;<a href="../index.html">me.angrybyte.kssm.dsl</a>&nbsp;/&nbsp;<a href="./index.html">StateMachineDsl</a><br/>
+<br/>
+<h1>StateMachineDsl</h1>
+<code><span class="keyword">class </span><span class="identifier">StateMachineDsl</span></code>
+<p>The DSL (domain-specific language) wrapper. Allows easy state machine configuration and instantiation.</p>
+<p>This wrapper respects the bounds set by the <a href="../../me.angrybyte.kssm.api/-state-machine/index.html">StateMachine</a> API, meaning that you might get configuration exceptions
+if you try to reconfigure things after state machine has started working.</p>
+<p>For example, <a href="initial-state.html">initialState</a> should be your last configuration call.
+Another example - handlers can be added at any time, as they are not state machine's configuration elements.</p>
+<p>Here's how to use it:</p>
+<pre><code class="lang-kotlin">object AtoB : SingletonAction()
+object AtoC : SingletonAction()
+object A : SingletonState()
+
+val sm = stateMachine {
+  mappings(
+    AtoB moves A to namedState("B"),
+    AtoC moves A to payloadState("C", 12.41),
+    namedAction("CtoA") moves payloadState("C", 12.41) to A
+  )
+  useStrictMatching = false
+  transitionsDispatcher = Dispatchers.Main // optional
+  transitionHandler { /* inline handler */}
+  initialState = A
+}
+
+// and then on that instance:
+sm.transition(AtoB)
+</code></pre>
+<p><strong>See Also</strong><br/>
+<p><a href="../../me.angrybyte.kssm.api/-state-machine/index.html">StateMachine</a></p>
+<p><a href="../state-machine.html">stateMachine</a></p>
+</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p>The DSL (domain-specific language) wrapper. Allows easy state machine configuration and instantiation.</p>
+<code><span class="identifier">StateMachineDsl</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.dsl.StateMachineDsl$<init>(me.angrybyte.kssm.api.StateMachine)/instance">instance</span><span class="symbol">:</span>&nbsp;<a href="../../me.angrybyte.kssm.api/-state-machine/index.html"><span class="identifier">StateMachine</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="default-dispatcher.html">defaultDispatcher</a></h4>
+</td>
+<td>
+<p>Sets the internal processing dispatcher.</p>
+<code><span class="keyword">var </span><span class="identifier">defaultDispatcher</span><span class="symbol">: </span><span class="identifier">CoroutineDispatcher</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="errors-dispatcher.html">errorsDispatcher</a></h4>
+</td>
+<td>
+<p>Sets the errors dispatcher.</p>
+<code><span class="keyword">var </span><span class="identifier">errorsDispatcher</span><span class="symbol">: </span><span class="identifier">CoroutineDispatcher</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="initial-state.html">initialState</a></h4>
+</td>
+<td>
+<p>Sets the initial state. Make this call your last configuration call as it creates a transition internally.</p>
+<code><span class="keyword">var </span><span class="identifier">initialState</span><span class="symbol">: </span><a href="../../me.angrybyte.kssm.api/-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="transitions-dispatcher.html">transitionsDispatcher</a></h4>
+</td>
+<td>
+<p>Sets the transitions dispatcher.</p>
+<code><span class="keyword">var </span><span class="identifier">transitionsDispatcher</span><span class="symbol">: </span><span class="identifier">CoroutineDispatcher</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="use-strict-matching.html">useStrictMatching</a></h4>
+</td>
+<td>
+<p>Sets the strict mapping flag.</p>
+<code><span class="keyword">var </span><span class="identifier">useStrictMatching</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="error-handler.html">errorHandler</a></h4>
+</td>
+<td>
+<p>Adds a new inline error handler.</p>
+<code><span class="keyword">fun </span><span class="identifier">errorHandler</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.dsl.StateMachineDsl$errorHandler(kotlin.coroutines.SuspendFunction1((kotlin.Throwable, kotlin.Unit)))/handler">handler</span><span class="symbol">:</span>&nbsp;<a href="../../me.angrybyte.kssm.api/-error-handler.html"><span class="identifier">ErrorHandler</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">StateMachineDsl</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="mappings.html">mappings</a></h4>
+</td>
+<td>
+<p>Takes a list of <a href="../../me.angrybyte.kssm.api.data/-state-mapping/index.html">StateMapping</a>s and adds them into the state machine.</p>
+<code><span class="keyword">fun </span><span class="identifier">mappings</span><span class="symbol">(</span><span class="keyword">vararg</span> <span class="identifier" id="me.angrybyte.kssm.dsl.StateMachineDsl$mappings(kotlin.Array((me.angrybyte.kssm.api.data.StateMapping((kotlin.Any, , )))))/mappings">mappings</span><span class="symbol">:</span>&nbsp;<a href="../../me.angrybyte.kssm.api.data/-state-mapping/index.html"><span class="identifier">StateMapping</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">StateMachineDsl</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="transition-handler.html">transitionHandler</a></h4>
+</td>
+<td>
+<p>Adds a new inline transition handler.</p>
+<code><span class="keyword">fun </span><span class="identifier">transitionHandler</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.dsl.StateMachineDsl$transitionHandler(kotlin.coroutines.SuspendFunction1((me.angrybyte.kssm.api.data.Transition((kotlin.Any, , )), kotlin.Unit)))/handler">handler</span><span class="symbol">:</span>&nbsp;<a href="../../me.angrybyte.kssm.api/-transition-handler.html"><span class="identifier">TransitionHandler</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">StateMachineDsl</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

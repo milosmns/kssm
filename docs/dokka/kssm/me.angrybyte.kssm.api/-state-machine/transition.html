@@ -1,0 +1,20 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>StateMachine.transition - kssm</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">kssm</a>&nbsp;/&nbsp;<a href="../index.html">me.angrybyte.kssm.api</a>&nbsp;/&nbsp;<a href="index.html">StateMachine</a>&nbsp;/&nbsp;<a href="./transition.html">transition</a><br/>
+<br/>
+<h1>transition</h1>
+<a name="me.angrybyte.kssm.api.StateMachine$transition(me.angrybyte.kssm.api.Action((me.angrybyte.kssm.api.StateMachine.transition.T)))"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">transition</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$transition(me.angrybyte.kssm.api.Action((me.angrybyte.kssm.api.StateMachine.transition.T)))/action">action</span><span class="symbol">:</span>&nbsp;<a href="../-action/index.html"><span class="identifier">Action</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Job</span></code>
+<p>Attempts to transition the state machine into a new <a href="../-state/index.html">State</a> using the given <a href="../-action/index.html">Action</a>. In case of a successful
+transition, your transition observers and <a href="transitions.html">transitions</a> Flow will be notified appropriately. In case of an error,
+your error observers and <a href="errors.html">errors</a> Flow will be notified appropriately.</p>
+<p>Note that this is an asynchronous operation in order to guarantee the order of calls and executions.</p>
+<p><strong>Return</strong><br/>
+A <a href="#">Job</a> to manually cancel the transition</p>
+</BODY>
+</HTML>

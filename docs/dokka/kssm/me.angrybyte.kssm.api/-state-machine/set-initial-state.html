@@ -1,0 +1,19 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>StateMachine.setInitialState - kssm</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">kssm</a>&nbsp;/&nbsp;<a href="../index.html">me.angrybyte.kssm.api</a>&nbsp;/&nbsp;<a href="index.html">StateMachine</a>&nbsp;/&nbsp;<a href="./set-initial-state.html">setInitialState</a><br/>
+<br/>
+<h1>setInitialState</h1>
+<a name="me.angrybyte.kssm.api.StateMachine$setInitialState(me.angrybyte.kssm.api.State((me.angrybyte.kssm.api.StateMachine.setInitialState.T)))"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">setInitialState</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$setInitialState(me.angrybyte.kssm.api.State((me.angrybyte.kssm.api.StateMachine.setInitialState.T)))/state">state</span><span class="symbol">:</span>&nbsp;<a href="../-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Sets the initial state for this state machine. If not set, the initial state will be <a href="#">CoreState.Incubating</a>.</p>
+<p>Make this call your last configuration call as it creates a transition internally.</p>
+<h3>Exceptions</h3>
+<p><a name="IncubationPassedException"></a>
+<code>IncubationPassedException</code> - if state machine has already started processing events</p>
+</BODY>
+</HTML>

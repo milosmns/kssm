@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>StateMachine.addStateMapping - kssm</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">kssm</a>&nbsp;/&nbsp;<a href="../index.html">me.angrybyte.kssm.api</a>&nbsp;/&nbsp;<a href="index.html">StateMachine</a>&nbsp;/&nbsp;<a href="./add-state-mapping.html">addStateMapping</a><br/>
+<br/>
+<h1>addStateMapping</h1>
+<a name="me.angrybyte.kssm.api.StateMachine$addStateMapping(me.angrybyte.kssm.api.data.StateMapping((me.angrybyte.kssm.api.StateMachine.addStateMapping.S, me.angrybyte.kssm.api.StateMachine.addStateMapping.A, me.angrybyte.kssm.api.StateMachine.addStateMapping.D)))"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">, </span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">D</span><span class="symbol">&gt;</span> <span class="identifier">addStateMapping</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$addStateMapping(me.angrybyte.kssm.api.data.StateMapping((me.angrybyte.kssm.api.StateMachine.addStateMapping.S, me.angrybyte.kssm.api.StateMachine.addStateMapping.A, me.angrybyte.kssm.api.StateMachine.addStateMapping.D)))/mapping">mapping</span><span class="symbol">:</span>&nbsp;<a href="../../me.angrybyte.kssm.api.data/-state-mapping/index.html"><span class="identifier">StateMapping</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">,</span>&nbsp;<span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Manually add new <a href="../../me.angrybyte.kssm.api.data/-state-mapping/index.html">StateMapping</a>s to this state machine. It is better to use the mappings DSL, if possible.</p>
+<h3>Parameters</h3>
+<p><a name="mapping"></a>
+<code>mapping</code> - The state-action-state mapping. Best constructed using the mapping DSL</p>
+<h3>Exceptions</h3>
+<p><a name="IncubationPassedException"></a>
+<code>IncubationPassedException</code> - if state machine has already started processing events</p>
+<p><a name="IllegalArgumentException"></a>
+<code>IllegalArgumentException</code> - if provided mapping has a conflict with another mapping</p>
+</BODY>
+</HTML>

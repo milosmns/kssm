@@ -76,7 +76,6 @@
       <option name="SPACE_AROUND_EQ_IN_KEYWORD_ARGUMENT" value="true" />
     </Python>
     <XML>
-      <option name="XML_SPACE_INSIDE_EMPTY_TAG" value="true" />
       <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
     </XML>
     <codeStyleSettings language="Groovy">
