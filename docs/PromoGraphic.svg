@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="1280px" height="640px" viewBox="0 0 1280 640" enable-background="new 0 0 1280 640" xml:space="preserve">
+<g>
+	<circle fill="#0A3542" stroke="#000000" stroke-miterlimit="10" cx="256" cy="174.239" r="110"/>
+	<text transform="matrix(1 0 0 1 230.7285 201.3584)" fill="#FFFFFF" font-family="'MyriadPro-Regular'" font-size="92.4">K</text>
+</g>
+<g>
+	<circle fill="#0A3542" stroke="#000000" stroke-miterlimit="10" cx="1023.713" cy="174.239" r="110"/>
+	<text transform="matrix(1 0 0 1 1000.75 201.3584)" fill="#FFFFFF" font-family="'MyriadPro-Regular'" font-size="92.4">T</text>
+</g>
+<g>
+	<circle fill="#0A3542" stroke="#000000" stroke-miterlimit="10" cx="640.149" cy="485.739" r="110"/>
+	<text transform="matrix(1 0 0 1 629.1069 512.8584)" fill="#FFFFFF" font-family="'MyriadPro-Regular'" font-size="92.4">I</text>
+</g>
+<g>
+	<g>
+		
+			<line fill="none" stroke="#39B54A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" x1="375" y1="175" x2="884" y2="175"/>
+		<g>
+			<polygon fill="#39B54A" points="905,175 875.152,187.196 882.234,175 875.152,162.807 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		
+			<line fill="none" stroke="#39B54A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" x1="933.286" y1="267.097" x2="761.469" y2="406.063"/>
+		<g>
+			<polygon fill="#39B54A" points="745,419.383 760.537,391.13 762.7,405.066 775.875,410.094 			"/>
+		</g>
+	</g>
+</g>
+<text transform="matrix(1 0 0 1 629.1069 512.8584)" fill="#FFFFFF" font-family="'MyriadPro-Regular'" font-size="92.4">I</text>
+<g>
+	<g>
+		<path fill="none" stroke="#39B54A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="M574.62,372.112
+			c0.072-42.934-32.35-79.819-75.981-84.387c-46.584-4.877-88.302,28.933-93.179,75.516c-4.877,46.585,28.933,88.303,75.517,93.18
+			c6.333,0.663,12.574,0.606,18.645-0.101"/>
+		<g>
+			<polygon fill="#39B54A" points="520.191,451.245 493.836,469.821 498.005,456.348 488.37,446.052 			"/>
+		</g>
+	</g>
+</g>
+<rect x="559.148" y="100.661" fill="none" width="162" height="63"/>
+<text transform="matrix(1 0 0 1 615.3447 151.7808)" fill="#006837" font-family="'MyriadPro-Regular'" font-size="72">O</text>
+<rect x="735.817" y="272.767" fill="none" width="162" height="63"/>
+<text transform="matrix(1 0 0 1 799.8262 323.8857)" fill="#006837" font-family="'MyriadPro-Regular'" font-size="72">L</text>
+<rect x="385.148" y="320" fill="none" width="162" height="63"/>
+<text transform="matrix(1 0 0 1 442.4609 371.1191)" fill="#006837" font-family="'MyriadPro-Regular'" font-size="72">N</text>
+</svg>
