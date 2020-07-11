@@ -1,0 +1,19 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>StateMachine.setDefaultDispatcher - kssm</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">kssm</a>&nbsp;/&nbsp;<a href="../index.html">me.angrybyte.kssm.api</a>&nbsp;/&nbsp;<a href="index.html">StateMachine</a>&nbsp;/&nbsp;<a href="./set-default-dispatcher.html">setDefaultDispatcher</a><br/>
+<br/>
+<h1>setDefaultDispatcher</h1>
+<a name="me.angrybyte.kssm.api.StateMachine$setDefaultDispatcher(kotlinx.coroutines.CoroutineDispatcher)"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">setDefaultDispatcher</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$setDefaultDispatcher(kotlinx.coroutines.CoroutineDispatcher)/dispatcher">dispatcher</span><span class="symbol">:</span>&nbsp;<span class="identifier">CoroutineDispatcher</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Changes the dispatcher that internally processes state machine changes.
+It's generally safe to use a multi-threaded dispatcher here.</p>
+<h3>Exceptions</h3>
+<p><a name="IncubationPassedException"></a>
+<code>IncubationPassedException</code> - if state machine has already started processing events</p>
+</BODY>
+</HTML>

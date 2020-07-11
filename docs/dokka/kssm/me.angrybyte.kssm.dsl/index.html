@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>me.angrybyte.kssm.dsl - kssm</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">kssm</a>&nbsp;/&nbsp;<a href="./index.html">me.angrybyte.kssm.dsl</a><br/>
+<br/>
+<h2>Package me.angrybyte.kssm.dsl</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-state-machine-dsl/index.html">StateMachineDsl</a></h4>
+</td>
+<td>
+<p>The DSL (domain-specific language) wrapper. Allows easy state machine configuration and instantiation.</p>
+<code><span class="keyword">class </span><span class="identifier">StateMachineDsl</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-state-vector/index.html">StateVector</a></h4>
+</td>
+<td>
+<p>Holds a <a href="../me.angrybyte.kssm.api/-state/index.html">State</a> and an <a href="../me.angrybyte.kssm.api/-action/index.html">Action</a>, without knowing anything about the resulting state.</p>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">StateVector</span><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">, </span><span class="identifier">A</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="moves.html">moves</a></h4>
+</td>
+<td>
+<p>Binds an <a href="../me.angrybyte.kssm.api/-action/index.html">Action</a> and a source <a href="../me.angrybyte.kssm.api/-state/index.html">State</a> into a <a href="-state-vector/index.html">StateVector</a>.</p>
+<code><span class="keyword">infix</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">S</span><span class="symbol">&gt;</span> <a href="../me.angrybyte.kssm.api/-action/index.html"><span class="identifier">Action</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">moves</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.dsl$moves(me.angrybyte.kssm.api.Action((me.angrybyte.kssm.dsl.moves.A)), me.angrybyte.kssm.api.State((me.angrybyte.kssm.dsl.moves.S)))/source">source</span><span class="symbol">:</span>&nbsp;<a href="../me.angrybyte.kssm.api/-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="-state-vector/index.html"><span class="identifier">StateVector</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">,</span>&nbsp;<span class="identifier">A</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="named-action.html">namedAction</a></h4>
+</td>
+<td>
+<p>Simplifies creation of a new <a href="#">NamedAction</a> instance.</p>
+<code><span class="keyword">fun </span><span class="identifier">namedAction</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.dsl$namedAction(kotlin.String)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../me.angrybyte.kssm.api/-action/index.html"><span class="identifier">Action</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing/index.html"><span class="identifier">Nothing</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="named-state.html">namedState</a></h4>
+</td>
+<td>
+<p>Simplifies creation of a new <a href="#">NamedState</a> instance.</p>
+<code><span class="keyword">fun </span><span class="identifier">namedState</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.dsl$namedState(kotlin.String)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../me.angrybyte.kssm.api/-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing/index.html"><span class="identifier">Nothing</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="payload-action.html">payloadAction</a></h4>
+</td>
+<td>
+<p>Simplifies creation of a new <a href="#">PayloadAction</a> instance.</p>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">payloadAction</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.dsl$payloadAction(kotlin.String, me.angrybyte.kssm.dsl.payloadAction.T)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.angrybyte.kssm.dsl$payloadAction(kotlin.String, me.angrybyte.kssm.dsl.payloadAction.T)/payload">payload</span><span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="../me.angrybyte.kssm.api/-action/index.html"><span class="identifier">Action</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="payload-state.html">payloadState</a></h4>
+</td>
+<td>
+<p>Simplifies creation of a new <a href="#">PayloadState</a> instance.</p>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">payloadState</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.dsl$payloadState(kotlin.String, me.angrybyte.kssm.dsl.payloadState.T)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="me.angrybyte.kssm.dsl$payloadState(kotlin.String, me.angrybyte.kssm.dsl.payloadState.T)/payload">payload</span><span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="../me.angrybyte.kssm.api/-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="state-machine.html">stateMachine</a></h4>
+</td>
+<td>
+<p>Starts the DSL (<a href="-state-machine-dsl/index.html">StateMachineDsl</a>) with a configuration block on a new state machine instance.</p>
+<code><span class="keyword">fun </span><span class="identifier">stateMachine</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.dsl$stateMachine(kotlin.Function1((me.angrybyte.kssm.dsl.StateMachineDsl, kotlin.Unit)))/initialize">initialize</span><span class="symbol">:</span>&nbsp;<a href="-state-machine-dsl/index.html"><span class="identifier">StateMachineDsl</span></a><span class="symbol">.</span><span class="symbol">(</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../me.angrybyte.kssm.api/-state-machine/index.html"><span class="identifier">StateMachine</span></a></code>
+<p>Starts the DSL (<a href="-state-machine-dsl/index.html">StateMachineDsl</a>) without a configuration block on a new state machine instance.</p>
+<code><span class="keyword">fun </span><span class="identifier">stateMachine</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../me.angrybyte.kssm.api/-state-machine/index.html"><span class="identifier">StateMachine</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="to.html">to</a></h4>
+</td>
+<td>
+<p>Binds the source <a href="../me.angrybyte.kssm.api/-state/index.html">State</a> and an <a href="../me.angrybyte.kssm.api/-action/index.html">Action</a> from a <a href="-state-vector/index.html">StateVector</a> with a destination state into a <a href="../me.angrybyte.kssm.api.data/-state-mapping/index.html">StateMapping</a>.</p>
+<code><span class="keyword">infix</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">S</span><span class="symbol">, </span><span class="identifier">D</span><span class="symbol">&gt;</span> <a href="-state-vector/index.html"><span class="identifier">StateVector</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">,</span>&nbsp;<span class="identifier">A</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">to</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.dsl$to(me.angrybyte.kssm.dsl.StateVector((me.angrybyte.kssm.dsl.to.S, me.angrybyte.kssm.dsl.to.A)), me.angrybyte.kssm.api.State((me.angrybyte.kssm.dsl.to.D)))/destination">destination</span><span class="symbol">:</span>&nbsp;<a href="../me.angrybyte.kssm.api/-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">D</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="../me.angrybyte.kssm.api.data/-state-mapping/index.html"><span class="identifier">StateMapping</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">,</span>&nbsp;<span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>StateMapping - kssm</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">kssm</a>&nbsp;/&nbsp;<a href="../index.html">me.angrybyte.kssm.api.data</a>&nbsp;/&nbsp;<a href="./index.html">StateMapping</a><br/>
+<br/>
+<h1>StateMapping</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">StateMapping</span><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">, </span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">D</span><span class="symbol">&gt;</span></code>
+<p>Keeps information about a particular state-to-state transition mapping.
+You should provide an action at creation time, and both <strong>start</strong> and <strong>end</strong> states surrounding the action.</p>
+<p>The easiest way to create one is by using the DSL:</p>
+<pre><code class="lang-kotlin">val mapping = AtoB moves A to B
+</code></pre>
+<p>where <code>AtoB</code> is the action, and <code>A</code> and <code>B</code> are states.</p>
+<h3>Parameters</h3>
+<p><a name="source"></a>
+<code>source</code> - the origin state (where the transition would start from)</p>
+<p><a name="action"></a>
+<code>action</code> - the trigger/action (what makes the transition start)</p>
+<p><a name="destination"></a>
+<code>destination</code> - the goal state (where the transition would end at)</p>
+<p><a name="S"></a>
+<code>S</code> - source state's payload type</p>
+<p><a name="A"></a>
+<code>A</code> - action's payload type</p>
+<p><a name="D"></a>
+<code>D</code> - destination state's payload type</p>
+<p><strong>See Also</strong><br/>
+<p><a href="../-transition/index.html">Transition</a></p>
+</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p>Keeps information about a particular state-to-state transition mapping.
+You should provide an action at creation time, and both <strong>start</strong> and <strong>end</strong> states surrounding the action.</p>
+<code><span class="identifier">StateMapping</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.data.StateMapping$<init>(me.angrybyte.kssm.api.State((me.angrybyte.kssm.api.data.StateMapping.S)), me.angrybyte.kssm.api.Action((me.angrybyte.kssm.api.data.StateMapping.A)), me.angrybyte.kssm.api.State((me.angrybyte.kssm.api.data.StateMapping.D)))/source">source</span><span class="symbol">:</span>&nbsp;<a href="../../me.angrybyte.kssm.api/-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="me.angrybyte.kssm.api.data.StateMapping$<init>(me.angrybyte.kssm.api.State((me.angrybyte.kssm.api.data.StateMapping.S)), me.angrybyte.kssm.api.Action((me.angrybyte.kssm.api.data.StateMapping.A)), me.angrybyte.kssm.api.State((me.angrybyte.kssm.api.data.StateMapping.D)))/action">action</span><span class="symbol">:</span>&nbsp;<a href="../../me.angrybyte.kssm.api/-action/index.html"><span class="identifier">Action</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="me.angrybyte.kssm.api.data.StateMapping$<init>(me.angrybyte.kssm.api.State((me.angrybyte.kssm.api.data.StateMapping.S)), me.angrybyte.kssm.api.Action((me.angrybyte.kssm.api.data.StateMapping.A)), me.angrybyte.kssm.api.State((me.angrybyte.kssm.api.data.StateMapping.D)))/destination">destination</span><span class="symbol">:</span>&nbsp;<a href="../../me.angrybyte.kssm.api/-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">D</span><span class="symbol">&gt;</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="action.html">action</a></h4>
+</td>
+<td>
+<p>the trigger/action (what makes the transition start)</p>
+<code><span class="keyword">val </span><span class="identifier">action</span><span class="symbol">: </span><a href="../../me.angrybyte.kssm.api/-action/index.html"><span class="identifier">Action</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="destination.html">destination</a></h4>
+</td>
+<td>
+<p>the goal state (where the transition would end at)</p>
+<code><span class="keyword">val </span><span class="identifier">destination</span><span class="symbol">: </span><a href="../../me.angrybyte.kssm.api/-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">D</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="source.html">source</a></h4>
+</td>
+<td>
+<p>the origin state (where the transition would start from)</p>
+<code><span class="keyword">val </span><span class="identifier">source</span><span class="symbol">: </span><a href="../../me.angrybyte.kssm.api/-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="to-string.html">toString</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">toString</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

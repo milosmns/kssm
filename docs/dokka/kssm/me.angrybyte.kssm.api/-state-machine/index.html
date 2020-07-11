@@ -1,0 +1,268 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>StateMachine - kssm</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">kssm</a>&nbsp;/&nbsp;<a href="../index.html">me.angrybyte.kssm.api</a>&nbsp;/&nbsp;<a href="./index.html">StateMachine</a><br/>
+<br/>
+<h1>StateMachine</h1>
+<code><span class="keyword">interface </span><span class="identifier">StateMachine</span></code>
+<p>The public-facing API for configuring, using and observing changes within a finite state machine.</p>
+<h2>About state machines</h2>
+<p>Fundamentally, a finite state machine (FSM) is a mathematical model of computation. It is an abstract machine that
+can be in exactly one of a finite number of states at any given time. The FSM can change from one state to another
+in response to some inputs (called <code>action</code>s here), and the change from one state to another is called a transition.
+An FSM is defined by a <strong>list of its states</strong>, its <strong>initial state</strong>, and the <strong>inputs/actions</strong> that trigger each
+of the transitions. In the context of this API, these definitions are called "state mappings".</p>
+<p>A state is a description of the status of a system that is waiting to execute a transition. A transition can be one,
+or a set of actions, to be executed when a condition is fulfilled or when an event is received. For example, when
+using an audio system to listen to the radio (the system is in the "playing radio" state), receiving a "next"
+action results in moving to the next station. When the system is in the "playing CD" state, the "next" stimulus
+results in moving to the next track. Identical stimuli trigger different actions depending on the current state.</p>
+<p>See <a href="https://i.imgur.com/rhDX2ux.png">this image</a> for a quick reference.</p>
+<p><em>Source: Wikipedia</em></p>
+<h2>Containment</h2>
+<p>This particular API assumes that the state machine is self-contained. This means that all processing and state
+manipulation happens inside of the implementing class: outside observers and interactors can only use a reduced set
+of state machine touch-points that this API exposes.</p>
+<p>All possible states and actions should be configured before any transition is executed.</p>
+<h3>Threading</h3>
+<p>By default, a single-threaded, queue-like event loop will be created for processing events and reporting results and
+errors. This event loop belongs to a <a href="#">CoroutineDispatcher</a> that gets created before the state machine starts running.
+In case you want to change threads, make sure that your dispatcher is single-threaded - otherwise you'll get the
+reported events out of order. The API exposes functions for changing the dispatchers in 3 layers:</p>
+<ul><li>Default dispatcher: used for internal processing of actions and transitioning to new states</li>
+<li>Transitions dispatcher: used for reporting state changes</li>
+<li>Error dispatcher: used for reporting any issues that occur while processing events</li>
+</ul>
+<p>The state machine manages its internal running jobs and transitions in a thread-safe way, while exposing control over
+long-running tasks to the user when needed by returning a <a href="#">Job</a> object for monitoring.</p>
+<h3>Monitoring</h3>
+<p>The state machine can be monitored in a couple of ways:</p>
+<ul><li><a href="#">Flow</a>: <strong>(preferred)</strong> allows data manipulation and in-place concurrency using the familiar native interface</li>
+<li>Handlers: <a href="../-transition-handler.html">TransitionHandler</a> and <a href="../-error-handler.html">ErrorHandler</a> allow suspending reactions to state machine events</li>
+<li>Observers: caller supplies a callback lambda, and gets a <a href="#">Job</a> in response to cancel the processing manually</li>
+</ul>
+<p>Note that for handlers and suspending jobs, state machine runs processing actions on configured dispatchers.
+The recommended approach with <a href="#">Flow</a> allows you to control your own processing mechanism, e.g. in a nested coroutine.</p>
+<h2>Instantiating</h2>
+<p>Trying to instantiate these state machines manually using constructors is an error. To be sure that things are
+correctly configured and prepared for executing event transitions, use the <a href="../../me.angrybyte.kssm.dsl/-state-machine-dsl/index.html">StateMachineDsl</a>.</p>
+<p>Here's an example how that would look like:</p>
+<pre><code class="lang-kotlin">object AtoB : SingletonAction()
+object BtoC : SingletonAction()
+object CtoC : SingletonAction()
+object A : SingletonState()
+object B : SingletonState()
+object C : SingletonState()
+
+val sm = stateMachine {
+  mappings(
+    AtoB moves A to B,
+    BtoC moves B to C,
+    CtoC moves C to C
+  )
+
+  defaultDispatcher = findMyProcessingDispatcher() // optional
+  transitionsDispatcher = findMyTransitionsDispatcher() // optional
+
+  transitionHandler { /* inline handler */}
+
+  initialState = A
+}
+</code></pre>
+<p>The returned object is an instance of this interface and you can call API functions on it. The returned instance is
+thread-safe, so you can multi-thread on it without any issues.</p>
+<p><strong>See Also</strong><br/>
+<p><a href="../-action/index.html">Action</a></p>
+<p><a href="../-state/index.html">State</a></p>
+<p><a href="../../me.angrybyte.kssm.dsl/-state-machine-dsl/index.html">StateMachineDsl</a></p>
+<p><a href="../../me.angrybyte.kssm.api.data/-state-mapping/index.html">StateMapping</a></p>
+<p><a href="../../me.angrybyte.kssm.api.data/-transition/index.html">Transition</a></p>
+</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="current-state.html">currentState</a></h4>
+</td>
+<td>
+<p>The <a href="../-state/index.html">State</a> that this state machine is currently in. Initially, that's <a href="#">CoreState.Incubating</a></p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">currentState</span><span class="symbol">: </span><a href="../-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="errors.html">errors</a></h4>
+</td>
+<td>
+<p>Allows observing error changes using the native <a href="#">Flow</a> interface</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">errors</span><span class="symbol">: </span><span class="identifier">Flow</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html"><span class="identifier">Throwable</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="last-action.html">lastAction</a></h4>
+</td>
+<td>
+<p>The last <a href="../-action/index.html">Action</a> executed successfully by this state machine. Initially, that's <a href="#">CoreAction.Birth</a></p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">lastAction</span><span class="symbol">: </span><a href="../-action/index.html"><span class="identifier">Action</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="transitions.html">transitions</a></h4>
+</td>
+<td>
+<p>Allows observing transition changes using the native <a href="#">Flow</a> interface</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">transitions</span><span class="symbol">: </span><span class="identifier">Flow</span><span class="symbol">&lt;</span><a href="../../me.angrybyte.kssm.api.data/-transition/index.html"><span class="identifier">Transition</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-error-handler.html">addErrorHandler</a></h4>
+</td>
+<td>
+<p>Adds a suspending error handler that gets invoked every time an error needs to be reported.
+Delivers events on the errors dispatcher.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addErrorHandler</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$addErrorHandler(kotlin.coroutines.SuspendFunction1((kotlin.Throwable, kotlin.Unit)))/handler">handler</span><span class="symbol">:</span>&nbsp;<a href="../-error-handler.html"><span class="identifier">ErrorHandler</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="add-state-mapping.html">addStateMapping</a></h4>
+</td>
+<td>
+<p>Manually add new <a href="../../me.angrybyte.kssm.api.data/-state-mapping/index.html">StateMapping</a>s to this state machine. It is better to use the mappings DSL, if possible.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">, </span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">D</span><span class="symbol">&gt;</span> <span class="identifier">addStateMapping</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$addStateMapping(me.angrybyte.kssm.api.data.StateMapping((me.angrybyte.kssm.api.StateMachine.addStateMapping.S, me.angrybyte.kssm.api.StateMachine.addStateMapping.A, me.angrybyte.kssm.api.StateMachine.addStateMapping.D)))/mapping">mapping</span><span class="symbol">:</span>&nbsp;<a href="../../me.angrybyte.kssm.api.data/-state-mapping/index.html"><span class="identifier">StateMapping</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">,</span>&nbsp;<span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="add-transition-handler.html">addTransitionHandler</a></h4>
+</td>
+<td>
+<p>Adds a suspending transition handler that gets invoked every time a transition change needs to be reported.
+Delivers events on the transitions dispatcher.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addTransitionHandler</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$addTransitionHandler(kotlin.coroutines.SuspendFunction1((me.angrybyte.kssm.api.data.Transition((kotlin.Any, , )), kotlin.Unit)))/handler">handler</span><span class="symbol">:</span>&nbsp;<a href="../-transition-handler.html"><span class="identifier">TransitionHandler</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="finish.html">finish</a></h4>
+</td>
+<td>
+<p>Stops all internal processing and removes all transition and error handlers and observables. Also invalidates all
+internal threading mechanisms, so nothing else can be executed on this state machine.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">finish</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-all-actions.html">getAllActions</a></h4>
+</td>
+<td>
+<p>Diagnostics: Check all possible actions this state machine can process</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getAllActions</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-action/index.html"><span class="identifier">Action</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-all-states.html">getAllStates</a></h4>
+</td>
+<td>
+<p>Diagnostics: Check all possible states this state machine can transition to</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getAllStates</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="observe-errors.html">observeErrors</a></h4>
+</td>
+<td>
+<p>Allows observing error changes using a plain callback lambda.
+Delivers events on the errors dispatcher.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">observeErrors</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$observeErrors(kotlin.Function1((kotlin.Throwable, kotlin.Unit)))/observer">observer</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html"><span class="identifier">Throwable</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Job</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="observe-transitions.html">observeTransitions</a></h4>
+</td>
+<td>
+<p>Allows observing transition changes using a plain callback lambda.
+Delivers events on the transitions dispatcher.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">observeTransitions</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$observeTransitions(kotlin.Function1((me.angrybyte.kssm.api.data.Transition((kotlin.Any, , )), kotlin.Unit)))/observer">observer</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="../../me.angrybyte.kssm.api.data/-transition/index.html"><span class="identifier">Transition</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">&gt;</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Job</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-error-handler.html">removeErrorHandler</a></h4>
+</td>
+<td>
+<p>Inverse to <a href="add-error-handler.html">addErrorHandler</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeErrorHandler</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$removeErrorHandler(kotlin.coroutines.SuspendFunction1((kotlin.Throwable, kotlin.Unit)))/handler">handler</span><span class="symbol">:</span>&nbsp;<a href="../-error-handler.html"><span class="identifier">ErrorHandler</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-transition-handler.html">removeTransitionHandler</a></h4>
+</td>
+<td>
+<p>Inverse to <a href="add-transition-handler.html">addTransitionHandler</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeTransitionHandler</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$removeTransitionHandler(kotlin.coroutines.SuspendFunction1((me.angrybyte.kssm.api.data.Transition((kotlin.Any, , )), kotlin.Unit)))/handler">handler</span><span class="symbol">:</span>&nbsp;<a href="../-transition-handler.html"><span class="identifier">TransitionHandler</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="set-default-dispatcher.html">setDefaultDispatcher</a></h4>
+</td>
+<td>
+<p>Changes the dispatcher that internally processes state machine changes.
+It's generally safe to use a multi-threaded dispatcher here.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">setDefaultDispatcher</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$setDefaultDispatcher(kotlinx.coroutines.CoroutineDispatcher)/dispatcher">dispatcher</span><span class="symbol">:</span>&nbsp;<span class="identifier">CoroutineDispatcher</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="set-error-handler-dispatcher.html">setErrorHandlerDispatcher</a></h4>
+</td>
+<td>
+<p>Changes the dispatcher that reports errors.
+Make sure that the given dispatcher is single-threaded, queue-like - otherwise events might come out-of-order.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">setErrorHandlerDispatcher</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$setErrorHandlerDispatcher(kotlinx.coroutines.CoroutineDispatcher)/dispatcher">dispatcher</span><span class="symbol">:</span>&nbsp;<span class="identifier">CoroutineDispatcher</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="set-initial-state.html">setInitialState</a></h4>
+</td>
+<td>
+<p>Sets the initial state for this state machine. If not set, the initial state will be <a href="#">CoreState.Incubating</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">setInitialState</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$setInitialState(me.angrybyte.kssm.api.State((me.angrybyte.kssm.api.StateMachine.setInitialState.T)))/state">state</span><span class="symbol">:</span>&nbsp;<a href="../-state/index.html"><span class="identifier">State</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="set-strict-state-matching.html">setStrictStateMatching</a></h4>
+</td>
+<td>
+<p>Allows the caller to switch between <strong>strict</strong> and <strong>loose</strong> state matching modes. When transitioning using an
+action, the state machine will try to find the resulting state by looking for the current state and the given
+action.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">setStrictStateMatching</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$setStrictStateMatching(kotlin.Boolean)/strict">strict</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="set-transition-handler-dispatcher.html">setTransitionHandlerDispatcher</a></h4>
+</td>
+<td>
+<p>Changes the dispatcher that reports transition changes.
+Make sure that the given dispatcher is single-threaded, queue-like - otherwise events might come out-of-order.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">setTransitionHandlerDispatcher</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$setTransitionHandlerDispatcher(kotlinx.coroutines.CoroutineDispatcher)/dispatcher">dispatcher</span><span class="symbol">:</span>&nbsp;<span class="identifier">CoroutineDispatcher</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="transition.html">transition</a></h4>
+</td>
+<td>
+<p>Attempts to transition the state machine into a new <a href="../-state/index.html">State</a> using the given <a href="../-action/index.html">Action</a>. In case of a successful
+transition, your transition observers and <a href="transitions.html">transitions</a> Flow will be notified appropriately. In case of an error,
+your error observers and <a href="errors.html">errors</a> Flow will be notified appropriately.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">transition</span><span class="symbol">(</span><span class="identifier" id="me.angrybyte.kssm.api.StateMachine$transition(me.angrybyte.kssm.api.Action((me.angrybyte.kssm.api.StateMachine.transition.T)))/action">action</span><span class="symbol">:</span>&nbsp;<a href="../-action/index.html"><span class="identifier">Action</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Job</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
