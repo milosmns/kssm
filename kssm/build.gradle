@@ -18,7 +18,7 @@ ext {
   kotlinSourceDir = 'src/main/kotlin'
   resourcesDir = 'src/main/resources'
 
-  projectVersion = '1.0.0'
+  projectVersion = '1.0.1'
   projectGroup = 'me.angrybyte'
 
   VERSION_NAME = projectVersion // Needed for 'bintrayUpload' task

@@ -1,0 +1,46 @@
+name: Release assembly and publish
+
+on:
+  push:
+    branches: [ release ]
+    tags:
+      - v*
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kssm
+    
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+    
+    - name: Build and check with Gradle
+      run: ./gradlew build
+    
+    - name: Publish to Maven
+      env:
+        BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+        BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
+        BINTRAY_OSS_USER: ${{ secrets.BINTRAY_OSS_USER }}
+        BINTRAY_GPG_PASSWORD: ${{ secrets.BINTRAY_GPG_PASSWORD }}
+        BINTRAY_OSS_PASSWORD: ${{ secrets.BINTRAY_OSS_PASSWORD }}
+      run: ./gradlew bintrayUpload
+    
+    - name: Publish to GitHub Releases
+      uses: fnkr/github-action-ghr@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GHR_COMPRESS: xz
+        GHR_PATH: kssm/
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
