@@ -203,4 +203,5 @@ $RECYCLE.BIN/
 # Custom rules
 .gradle
 kssm/build
+demo/build
 local.properties
