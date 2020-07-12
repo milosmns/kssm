@@ -1,13 +1,43 @@
 plugins {
-  id 'org.jetbrains.kotlin.jvm' version '1.3.72'
-  id 'org.jmailen.kotlinter' version '2.4.1'
-  id 'org.jetbrains.dokka' version '0.10.1'
+  id 'org.jetbrains.kotlin.jvm' version '1.3.72' // Basic Kotlin support
+  id 'org.jmailen.kotlinter' version '2.4.1' // Lint for Kotlin
+  id 'org.jetbrains.dokka' version '0.10.1' // Documentation generator
+  id 'maven-publish' // Packaging and uploading JARs with POMs
+  id 'com.jfrog.bintray' version '1.8.5' // Uploading to JCenter
+  id 'com.github.dcendents.android-maven' version '2.1' // Packaging resources into JARs
 }
+
+// Globally accessible variables
+
+ext {
+  kotlinTargetLevel = "1.6" // Required for old JVMs (still active)
+  javaTargetLevel = "1.8" // Required for JUnit Jupiter
+
+  outputDir = 'build'
+  javaSourceDir = 'src/main/java'
+  kotlinSourceDir = 'src/main/kotlin'
+  resourcesDir = 'src/main/resources'
+
+  projectVersion = '1.0.0'
+  projectGroup = 'me.angrybyte'
+
+  VERSION_NAME = projectVersion // Needed for 'bintrayUpload' task
+  GROUP = projectGroup // Needed for 'bintrayUpload' task
+
+  coroutines_version = "1.3.7"
+}
+
+// Directory configuration
+
+project.buildDir = outputDir
+sourceSets.main.java.srcDirs += javaSourceDir
+sourceSets.main.kotlin.srcDirs += kotlinSourceDir
+sourceSets.main.resources.srcDirs += resourcesDir
 
 // Maven Coordinates
 
-group 'me.angrybyte'
-version '0.1'
+group projectGroup
+version projectVersion
 
 // Module dependencies
 
@@ -16,33 +46,34 @@ repositories {
   mavenCentral()
 }
 
-ext {
-  coroutines_version = "1.3.7"
-}
-
 dependencies {
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+  api "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+  api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
 
   testImplementation "org.junit.jupiter:junit-jupiter:5.6.2"
   testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
 }
+
+// JVM bytecode config
+
+sourceCompatibility = javaTargetLevel
+targetCompatibility = javaTargetLevel
+
+compileKotlin {
+  kotlinOptions.jvmTarget = kotlinTargetLevel
+}
+
+compileTestKotlin {
+  kotlinOptions.jvmTarget = kotlinTargetLevel
+}
+
+// Tests config
 
 test {
   useJUnitPlatform()
   testLogging {
     events "passed", "skipped", "failed", "standardOut", "standardError"
   }
-}
-
-// Kotlin config
-
-compileKotlin {
-  kotlinOptions.jvmTarget = "1.8"
-}
-
-compileTestKotlin {
-  kotlinOptions.jvmTarget = "1.8"
 }
 
 // Linter config
@@ -62,3 +93,7 @@ dokka {
   outputFormat = 'html'
   outputDirectory = "$buildDir/../../docs/dokka"
 }
+
+// Custom scripts
+
+apply from: 'gradle/scripts/gradle-maven-push.gradle'
