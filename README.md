@@ -1,5 +1,7 @@
 # Simple State Machines in Kotlin (KSSM)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/236ca2459f7e4853bc3950be6b365776)](https://app.codacy.com/manual/milosmns/kssm?utm_source=github.com&utm_medium=referral&utm_content=milosmns/kssm&utm_campaign=Badge_Grade_Dashboard)
+
 ![Experimental State](https://img.shields.io/badge/state-experimental-orange)
 ![Workflow Status](https://img.shields.io/github/workflow/status/milosmns/kssm/Pre-release%20check)
 ![Code Size](https://img.shields.io/github/languages/code-size/milosmns/kssm)
