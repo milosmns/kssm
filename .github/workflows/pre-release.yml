@@ -23,16 +23,3 @@ jobs:
       run: chmod +x ./gradlew
     - name: Build and check with Gradle
       run: ./gradlew build
-  
-  codacy-analysis-cli:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: kssm
-    name: codacy-analysis-cli
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run codacy-analysis-cli
-        uses: mrfyda/codacy-analysis-cli-action@master
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
