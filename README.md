@@ -6,6 +6,7 @@
 ![License](https://img.shields.io/github/license/milosmns/kssm)
 ![Download](https://img.shields.io/bintray/v/milosmns/maven/kssm?color=green)
 ![Latest Release](https://img.shields.io/github/v/release/milosmns/kssm?include_prereleases)
+![Codacy Grade](https://img.shields.io/codacy/grade/0ed57b0d78ef467daa0f534736d6def8)
 
 ## What is this?
 
