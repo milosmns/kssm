@@ -1,0 +1,645 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>StateMachine</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+    <link href="../../../styles/style.css" rel="Stylesheet">
+    <link href="../../../styles/logo-styles.css" rel="Stylesheet">
+    <link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+    <link href="../../../styles/main.css" rel="Stylesheet">
+    <script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+    <script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+    <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+    <script type="text/javascript" src="../../../scripts/main.js" async="async"></script>
+    <script>var pathToRoot = "../../../";</script>
+  </head>
+  <body>
+    <div id="container">
+      <div id="leftColumn">
+        <div id="logo"></div>
+        <div id="paneSearch"></div>
+        <div id="sideMenu"></div>
+      </div>
+      <div id="main">
+        <div id="leftToggler"><span class="icon-toggler"></span></div>
+        <div id="searchBar"></div>
+        <script type="text/javascript" src="../../../scripts/pages.js"></script>
+        <script type="text/javascript" src="../../../scripts/main.js"></script>
+        <div id="content" pageIds="me.angrybyte.kssm.api/StateMachine///PointingToDeclaration//-1173211432">
+          <div class="breadcrumbs"><a href="../../index.html">kssm</a>/<a href="../index.html">me.angrybyte.kssm.api</a>/<a href="index.html">StateMachine</a></div>
+          <div class="cover ">
+            <h1 class="cover"><span>State</span><wbr></wbr><span>Machine</span></h1>
+            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">interface <a href="index.html">StateMachine</a><span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div><p class="paragraph">The public-facing API for configuring, using and observing changes within a finite state machine.</p><h2 class=""> About state machines</h2><p class="paragraph">Fundamentally, a finite state machine (FSM) is a mathematical model of computation. It is an abstract machine that can be in exactly one of a finite number of states at any given time. The FSM can change from one state to another in response to some inputs (called <code>action</code>s here), and the change from one state to another is called a transition. An FSM is defined by a list of its states, its initial state, and the inputs/actions that trigger each of the transitions. In the context of this API, these definitions are called &quot;state mappings&quot;.</p><p class="paragraph">A state is a description of the status of a system that is waiting to execute a transition. A transition can be one, or a set of actions, to be executed when a condition is fulfilled or when an event is received. For example, when using an audio system to listen to the radio (the system is in the &quot;playing radio&quot; state), receiving a &quot;next&quot; action results in moving to the next station. When the system is in the &quot;playing CD&quot; state, the &quot;next&quot; stimulus results in moving to the next track. Identical stimuli trigger different actions depending on the current state.</p><p class="paragraph">See <a href="https://i.imgur.com/rhDX2ux.png">this image</a> for a quick reference.</p><p class="paragraph">Source: Wikipedia</p><h2 class=""> Containment</h2><p class="paragraph">This particular API assumes that the state machine is self-contained. This means that all processing and state manipulation happens inside of the implementing class: outside observers and interactors can only use a reduced set of state machine touch-points that this API exposes.</p><p class="paragraph">All possible states and actions should be configured before any transition is executed.</p><h3 class=""> Threading</h3><p class="paragraph">By default, a single-threaded, queue-like event loop will be created for processing events and reporting results and errors. This event loop belongs to a <span data-unresolved-link="kotlinx.coroutines/CoroutineDispatcher///PointingToDeclaration/">CoroutineDispatcher</span> that gets created before the state machine starts running. In case you want to change threads, make sure that your dispatcher is single-threaded - otherwise you'll get the reported events out of order. The API exposes functions for changing the dispatchers in 3 layers:</p><ul><li><p class="paragraph">Default dispatcher: used for internal processing of actions and transitioning to new states</p></li><li><p class="paragraph">Transitions dispatcher: used for reporting state changes</p></li><li><p class="paragraph">Error dispatcher: used for reporting any issues that occur while processing events</p></li></ul><p class="paragraph">The state machine manages its internal running jobs and transitions in a thread-safe way, while exposing control over long-running tasks to the user when needed by returning a <span data-unresolved-link="kotlinx.coroutines/Job///PointingToDeclaration/">Job</span> object for monitoring.</p><h3 class=""> Monitoring</h3><p class="paragraph">The state machine can be monitored in a couple of ways:</p><ul><li><p class="paragraph"><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span>: (preferred) allows data manipulation and in-place concurrency using the familiar native interface</p></li><li><p class="paragraph">Handlers: <a href="../index.html#%5Bme.angrybyte.kssm.api%2FTransitionHandler%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F-1173211432">TransitionHandler</a> and <a href="../index.html#%5Bme.angrybyte.kssm.api%2FErrorHandler%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F-1173211432">ErrorHandler</a> allow suspending reactions to state machine events</p></li><li><p class="paragraph">Observers: caller supplies a callback lambda, and gets a <span data-unresolved-link="kotlinx.coroutines/Job///PointingToDeclaration/">Job</span> in response to cancel the processing manually</p></li></ul><p class="paragraph">Note that for handlers and suspending jobs, state machine runs processing actions on configured dispatchers. The recommended approach with <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> allows you to control your own processing mechanism, e.g. in a nested coroutine.</p><h2 class=""> Instantiating</h2><p class="paragraph">Trying to instantiate these state machines manually using constructors is an error. To be sure that things are correctly configured and prepared for executing event transitions, use the <a href="../../me.angrybyte.kssm.dsl/-state-machine-dsl/index.html">StateMachineDsl</a>.</p><p class="paragraph">Here's an example how that would look like:</p><div class="sample-container"><code class="" theme="idea"><pre>object AtoB : SingletonAction()<br>object BtoC : SingletonAction()<br>object CtoC : SingletonAction()<br>object A : SingletonState()<br>object B : SingletonState()<br>object C : SingletonState()<br><br>val sm = stateMachine {<br>  mappings(<br>    AtoB moves A to B,<br>    BtoC moves B to C,<br>    CtoC moves C to C<br>  )<br><br>  defaultDispatcher = findMyProcessingDispatcher() // optional<br>  transitionsDispatcher = findMyTransitionsDispatcher() // optional<br><br>  transitionHandler { /* inline handler */}<br><br>  initialState = A<br>}</pre></code></div><p class="paragraph">The returned object is an instance of this interface and you can call API functions on it. The returned instance is thread-safe, so you can multi-thread on it without any issues.</p></div></div>
+          </div>
+          <div class="tabbedcontent">
+            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="See also">See also</button></div>
+            <div class="tabs-section-body">
+              <h2 class="">See also</h2>
+              <div data-togglable="See also">
+                <div class="platform-hinted WithExtraAttributes" data-platform-hinted="data-platform-hinted" data-togglable="See also"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div data-togglable="See also"><div class="table" data-togglable="See also"><div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes RowTitle"><div class=""><span class="inline-flex"><a href="../-action/index.html">Action</a></span><span class="inline-flex"><div data-togglable="See also"></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes RowTitle"><div class=""><span class="inline-flex"><a href="../-state/index.html">State</a></span><span class="inline-flex"><div data-togglable="See also"></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes RowTitle"><div class=""><span class="inline-flex"><a href="../../me.angrybyte.kssm.dsl/-state-machine-dsl/index.html">StateMachineDsl</a></span><span class="inline-flex"><div data-togglable="See also"></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes RowTitle"><div class=""><span class="inline-flex"><a href="../../me.angrybyte.kssm.api.data/-state-mapping/index.html">StateMapping</a></span><span class="inline-flex"><div data-togglable="See also"></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes RowTitle"><div class=""><span class="inline-flex"><a href="../../me.angrybyte.kssm.api.data/-transition/index.html">Transition</a></span><span class="inline-flex"><div data-togglable="See also"></div></span></div><div></div></div></div></div></div></div></div>
+              </div>
+              <h2 class="">Functions</h2>
+              <div class="table" data-togglable="Functions"><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="addErrorHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="add-error-handler.html">addErrorHandler</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="add-error-handler.html">addErrorHandler</a>(handler: <a href="../index.html#%5Bme.angrybyte.kssm.api%2FErrorHandler%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F-1173211432">ErrorHandler</a>)<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="addErrorHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="addErrorHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Adds a suspending error handler that gets invoked every time an error needs to be reported.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddStateMapping%2F%23me.angrybyte.kssm.api.data.StateMapping%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="addStateMapping" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddStateMapping%2F%23me.angrybyte.kssm.api.data.StateMapping%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="add-state-mapping.html">addStateMapping</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddStateMapping%2F%23me.angrybyte.kssm.api.data.StateMapping%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun &lt;<a href="add-state-mapping.html">S</a>, <a href="add-state-mapping.html">A</a>, <a href="add-state-mapping.html">D</a>&gt; <a href="add-state-mapping.html">addStateMapping</a>(mapping: <a href="../../me.angrybyte.kssm.api.data/-state-mapping/index.html">StateMapping</a>&lt;<a href="add-state-mapping.html">S</a>, <a href="add-state-mapping.html">A</a>, <a href="add-state-mapping.html">D</a>&gt;)<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddStateMapping%2F%23me.angrybyte.kssm.api.data.StateMapping%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="addStateMapping" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddStateMapping%2F%23me.angrybyte.kssm.api.data.StateMapping%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddStateMapping%2F%23me.angrybyte.kssm.api.data.StateMapping%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="addStateMapping" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddStateMapping%2F%23me.angrybyte.kssm.api.data.StateMapping%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%2CTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Manually add new <a href="../../me.angrybyte.kssm.api.data/-state-mapping/index.html">StateMapping</a>s to this state machine.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="addTransitionHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="add-transition-handler.html">addTransitionHandler</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="add-transition-handler.html">addTransitionHandler</a>(handler: <a href="../index.html#%5Bme.angrybyte.kssm.api%2FTransitionHandler%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F-1173211432">TransitionHandler</a>)<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="addTransitionHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="addTransitionHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FaddTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Adds a suspending transition handler that gets invoked every time a transition change needs to be reported.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bkotlin%2FAny%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="equals" id="%5Bkotlin%2FAny%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../../me.angrybyte.kssm.impl.state/-singleton-state/index.html#%5Bkotlin%2FAny%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432">equals</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bkotlin%2FAny%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">open operator fun <a href="../../me.angrybyte.kssm.impl.state/-singleton-state/index.html#%5Bkotlin%2FAny%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432">equals</a>(other: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>?): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ffinish%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="finish" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ffinish%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="finish.html">finish</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ffinish%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="finish.html">finish</a>()<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ffinish%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="finish" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ffinish%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ffinish%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="finish" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ffinish%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Stops all internal processing and removes all transition and error handlers and observables.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllActions%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="getAllActions" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllActions%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="get-all-actions.html">getAllActions</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllActions%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="get-all-actions.html">getAllActions</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a>&lt;<a href="../-action/index.html">Action</a>&lt;*&gt;&gt;<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllActions%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="getAllActions" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllActions%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllActions%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="getAllActions" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllActions%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Diagnostics: Check all possible actions this state machine can process</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllStates%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="getAllStates" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllStates%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="get-all-states.html">getAllStates</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllStates%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="get-all-states.html">getAllStates</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a>&lt;<a href="../-state/index.html">State</a>&lt;*&gt;&gt;<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllStates%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="getAllStates" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllStates%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllStates%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="getAllStates" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FgetAllStates%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Diagnostics: Check all possible states this state machine can transition to</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bkotlin%2FAny%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="hashCode" id="%5Bkotlin%2FAny%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../../me.angrybyte.kssm.impl.state/-singleton-state/index.html#%5Bkotlin%2FAny%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432">hashCode</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bkotlin%2FAny%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">open fun <a href="../../me.angrybyte.kssm.impl.state/-singleton-state/index.html#%5Bkotlin%2FAny%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432">hashCode</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveErrors%2F%23kotlin.Function1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="observeErrors" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveErrors%2F%23kotlin.Function1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="observe-errors.html">observeErrors</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveErrors%2F%23kotlin.Function1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="observe-errors.html">observeErrors</a>(observer: (<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a>) -&gt; <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a>): <span data-unresolved-link="kotlinx.coroutines/Job///PointingToDeclaration/">Job</span><span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveErrors%2F%23kotlin.Function1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="observeErrors" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveErrors%2F%23kotlin.Function1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveErrors%2F%23kotlin.Function1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="observeErrors" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveErrors%2F%23kotlin.Function1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Allows observing error changes using a plain callback lambda.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveTransitions%2F%23kotlin.Function1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="observeTransitions" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveTransitions%2F%23kotlin.Function1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="observe-transitions.html">observeTransitions</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveTransitions%2F%23kotlin.Function1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="observe-transitions.html">observeTransitions</a>(observer: (<a href="../../me.angrybyte.kssm.api.data/-transition/index.html">Transition</a>&lt;*, *, *&gt;) -&gt; <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a>): <span data-unresolved-link="kotlinx.coroutines/Job///PointingToDeclaration/">Job</span><span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveTransitions%2F%23kotlin.Function1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="observeTransitions" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveTransitions%2F%23kotlin.Function1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveTransitions%2F%23kotlin.Function1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="observeTransitions" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FobserveTransitions%2F%23kotlin.Function1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Allows observing transition changes using a plain callback lambda.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="removeErrorHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="remove-error-handler.html">removeErrorHandler</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="remove-error-handler.html">removeErrorHandler</a>(handler: <a href="../index.html#%5Bme.angrybyte.kssm.api%2FErrorHandler%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F-1173211432">ErrorHandler</a>)<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="removeErrorHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="removeErrorHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveErrorHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bkotlin.Throwable%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Inverse to <a href="add-error-handler.html">addErrorHandler</a>.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="removeTransitionHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="remove-transition-handler.html">removeTransitionHandler</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="remove-transition-handler.html">removeTransitionHandler</a>(handler: <a href="../index.html#%5Bme.angrybyte.kssm.api%2FTransitionHandler%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F-1173211432">TransitionHandler</a>)<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="removeTransitionHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="removeTransitionHandler" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FremoveTransitionHandler%2F%23kotlin.coroutines.SuspendFunction1%5Bme.angrybyte.kssm.api.data.Transition%5B*%2C*%2C*%5D%2Ckotlin.Unit%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Inverse to <a href="add-transition-handler.html">addTransitionHandler</a>.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetDefaultDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setDefaultDispatcher" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetDefaultDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="set-default-dispatcher.html">setDefaultDispatcher</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetDefaultDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="set-default-dispatcher.html">setDefaultDispatcher</a>(dispatcher: <span data-unresolved-link="kotlinx.coroutines/CoroutineDispatcher///PointingToDeclaration/">CoroutineDispatcher</span>)<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetDefaultDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setDefaultDispatcher" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetDefaultDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetDefaultDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setDefaultDispatcher" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetDefaultDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Changes the dispatcher that internally processes state machine changes.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetErrorHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setErrorHandlerDispatcher" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetErrorHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="set-error-handler-dispatcher.html">setErrorHandlerDispatcher</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetErrorHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="set-error-handler-dispatcher.html">setErrorHandlerDispatcher</a>(dispatcher: <span data-unresolved-link="kotlinx.coroutines/CoroutineDispatcher///PointingToDeclaration/">CoroutineDispatcher</span>)<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetErrorHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setErrorHandlerDispatcher" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetErrorHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetErrorHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setErrorHandlerDispatcher" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetErrorHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Changes the dispatcher that reports errors.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetInitialState%2F%23me.angrybyte.kssm.api.State%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setInitialState" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetInitialState%2F%23me.angrybyte.kssm.api.State%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="set-initial-state.html">setInitialState</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetInitialState%2F%23me.angrybyte.kssm.api.State%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun &lt;<a href="set-initial-state.html">T</a>&gt; <a href="set-initial-state.html">setInitialState</a>(state: <a href="../-state/index.html">State</a>&lt;<a href="set-initial-state.html">T</a>&gt;)<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetInitialState%2F%23me.angrybyte.kssm.api.State%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setInitialState" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetInitialState%2F%23me.angrybyte.kssm.api.State%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetInitialState%2F%23me.angrybyte.kssm.api.State%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setInitialState" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetInitialState%2F%23me.angrybyte.kssm.api.State%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Sets the initial state for this state machine.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetStrictStateMatching%2F%23kotlin.Boolean%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setStrictStateMatching" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetStrictStateMatching%2F%23kotlin.Boolean%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="set-strict-state-matching.html">setStrictStateMatching</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetStrictStateMatching%2F%23kotlin.Boolean%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="set-strict-state-matching.html">setStrictStateMatching</a>(strict: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>)<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetStrictStateMatching%2F%23kotlin.Boolean%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setStrictStateMatching" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetStrictStateMatching%2F%23kotlin.Boolean%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetStrictStateMatching%2F%23kotlin.Boolean%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setStrictStateMatching" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetStrictStateMatching%2F%23kotlin.Boolean%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Allows the caller to switch between strict and loose state matching modes.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetTransitionHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setTransitionHandlerDispatcher" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetTransitionHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="set-transition-handler-dispatcher.html">setTransitionHandlerDispatcher</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetTransitionHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun <a href="set-transition-handler-dispatcher.html">setTransitionHandlerDispatcher</a>(dispatcher: <span data-unresolved-link="kotlinx.coroutines/CoroutineDispatcher///PointingToDeclaration/">CoroutineDispatcher</span>)<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetTransitionHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setTransitionHandlerDispatcher" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetTransitionHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetTransitionHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="setTransitionHandlerDispatcher" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FsetTransitionHandlerDispatcher%2F%23kotlinx.coroutines.CoroutineDispatcher%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Changes the dispatcher that reports transition changes.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bkotlin%2FAny%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="toString" id="%5Bkotlin%2FAny%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../../me.angrybyte.kssm.dsl/-state-vector/index.html#%5Bkotlin%2FAny%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432">toString</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bkotlin%2FAny%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">open fun <a href="../../me.angrybyte.kssm.dsl/-state-vector/index.html#%5Bkotlin%2FAny%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432">toString</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+</div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ftransition%2F%23me.angrybyte.kssm.api.Action%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="transition" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ftransition%2F%23me.angrybyte.kssm.api.Action%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="transition.html">transition</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ftransition%2F%23me.angrybyte.kssm.api.Action%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract fun &lt;<a href="transition.html">T</a>&gt; <a href="transition.html">transition</a>(action: <a href="../-action/index.html">Action</a>&lt;<a href="transition.html">T</a>&gt;): <span data-unresolved-link="kotlinx.coroutines/Job///PointingToDeclaration/">Job</span><span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ftransition%2F%23me.angrybyte.kssm.api.Action%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="transition" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ftransition%2F%23me.angrybyte.kssm.api.Action%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ftransition%2F%23me.angrybyte.kssm.api.Action%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" anchor-label="transition" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ftransition%2F%23me.angrybyte.kssm.api.Action%5BTypeParam%28bounds%3D%5Bkotlin.Any%3F%5D%29%5D%2FPointingToDeclaration%2F%5D%2FFunctions%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>Attempts to transition the state machine into a new <a href="../-state/index.html">State</a> using the given <a href="../-action/index.html">Action</a>.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="">Properties</h2>
+              <div class="table" data-togglable="Properties"><a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FcurrentState%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432" anchor-label="currentState" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FcurrentState%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="current-state.html">currentState</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FcurrentState%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract val <a href="current-state.html">currentState</a>: <a href="../-state/index.html">State</a>&lt;*&gt;<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div><div class="brief ">The <a href="../-state/index.html">State</a> that this state machine is currently in.</div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ferrors%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432" anchor-label="errors" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ferrors%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="errors.html">errors</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ferrors%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract val <a href="errors.html">errors</a>: <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a>&gt;<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div><div class="brief ">Allows observing error changes using the native <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> interface</div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2FlastAction%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432" anchor-label="lastAction" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2FlastAction%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="last-action.html">lastAction</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2FlastAction%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract val <a href="last-action.html">lastAction</a>: <a href="../-action/index.html">Action</a>&lt;*&gt;<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div><div class="brief ">The last <a href="../-action/index.html">Action</a> executed successfully by this state machine.</div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ftransitions%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432" anchor-label="transitions" id="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ftransitions%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="transitions.html">transitions</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bme.angrybyte.kssm.api%2FStateMachine%2Ftransitions%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F-1173211432"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.2496 5.3C20.3496 4.5 19.2496 4 18.0496 4C16.8496 4 15.6496 4.5 14.8496 5.3L10.3496 9.8L11.7496 11.2L16.2496 6.7C17.2496 5.7 18.8496 5.7 19.8496 6.7C20.8496 7.7 20.8496 9.3 19.8496 10.3L15.3496 14.8L16.7496 16.2L21.2496 11.7C22.1496 10.8 22.5496 9.7 22.5496 8.5C22.5496 7.3 22.1496 6.2 21.2496 5.3Z"/>
+    <path d="M8.35 16.7998C7.35 17.7998 5.75 17.7998 4.75 16.7998C3.75 15.7998 3.75 14.1998 4.75 13.1998L9.25 8.6998L7.85 7.2998L3.35 11.7998C1.55 13.5998 1.55 16.3998 3.35 18.1998C4.25 19.0998 5.35 19.4998 6.55 19.4998C7.75 19.4998 8.85 19.0998 9.75 18.1998L14.25 13.6998L12.85 12.2998L8.35 16.7998Z"/>
+</svg></span>
+                          <div class="copy-popup-wrapper "><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">abstract val <a href="transitions.html">transitions</a>: <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span>&lt;<a href="../../me.angrybyte.kssm.api.data/-transition/index.html">Transition</a>&lt;*, *, *&gt;&gt;<span class="top-right-position"><span class="copy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 4H15V16H5V4ZM17 7H19V18V20H17H8V18H17V7Z" fill="black"/>
+                       </svg></span><div class="copy-popup-wrapper popup-to-left"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 9C18 14 14 18 9 18C4 18 0 14 0 9C0 4 4 0 9 0C14 0 18 4 18 9ZM14.2 6.2L12.8 4.8L7.5 10.1L5.3 7.8L3.8 9.2L7.5 13L14.2 6.2Z" fill="#4DBB5F"/>
+</svg><span>Content copied to clipboard</span></div></span></div><div class="brief ">Allows observing transition changes using the native <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> interface</div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#container"><svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M11.3337 9.66683H0.666992L6.00033 3.66683L11.3337 9.66683Z" fill="black"/>
+    <path d="M0.666992 0.333496H11.3337V1.66683H0.666992V0.333496Z" fill="black"/>
+</svg></a></span><span>© 2020 Copyright</span><span class="pull-right"><span>Sponsored and developed by dokka</span><a href="https://github.com/Kotlin/dokka"><span class="padded-icon"><svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 0H2.3949L4.84076 2.44586L0 7.28662L0.713376 8L5.55414 3.15924L8 5.6051V0Z" fill="black"/>
+</svg></span></a></span></div>
+      </div>
+    </div>
+  </body>
+</html>
+
