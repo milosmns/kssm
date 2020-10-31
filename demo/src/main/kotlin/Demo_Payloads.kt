@@ -1,7 +1,6 @@
 @file:Suppress("DuplicatedCode")
 
 import WaterState.Empty
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.runBlocking
@@ -16,7 +15,6 @@ import java.lang.System.err
 import java.util.concurrent.atomic.AtomicInteger
 
 @Suppress("UNCHECKED_CAST")
-@ExperimentalCoroutinesApi
 fun main() = runBlocking {
 
   // NOTE: we can manipulate the payload as long as it's internally mutable

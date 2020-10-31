@@ -1,7 +1,6 @@
 package me.angrybyte.kssm.dsl
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import me.angrybyte.kssm.api.ErrorHandler
 import me.angrybyte.kssm.api.State
 import me.angrybyte.kssm.api.StateMachine
@@ -127,12 +126,10 @@ class StateMachineDsl(
 /**
  * Starts the DSL ([StateMachineDsl]) with a configuration block on a new state machine instance.
  */
-@ExperimentalCoroutinesApi
 fun stateMachine(initialize: StateMachineDsl.() -> Unit): StateMachine =
   StateMachineDsl(StateMachineImpl()).apply(initialize).instance
 
 /**
  * Starts the DSL ([StateMachineDsl]) without a configuration block on a new state machine instance.
  */
-@ExperimentalCoroutinesApi
 fun stateMachine(): StateMachine = StateMachineImpl()

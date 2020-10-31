@@ -8,7 +8,6 @@ import WaterState.Empty
 import WaterState.Ice
 import WaterState.Liquid
 import WaterState.Steam
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.runBlocking
@@ -18,7 +17,6 @@ import me.angrybyte.kssm.dsl.stateMachine
 import me.angrybyte.kssm.dsl.to
 import java.lang.System.err
 
-@ExperimentalCoroutinesApi
 fun main() = runBlocking {
 
   // NOTE: infix function 'to' comes from the DSL package
