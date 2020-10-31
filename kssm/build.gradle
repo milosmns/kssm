@@ -1,7 +1,7 @@
 plugins {
-  id 'org.jetbrains.kotlin.jvm' version '1.3.72' // Basic Kotlin support
-  id 'org.jmailen.kotlinter' version '2.4.1' // Lint for Kotlin
-  id 'org.jetbrains.dokka' version '0.10.1' // Documentation generator
+  id 'org.jetbrains.kotlin.jvm' version '1.4.0' // Basic Kotlin support
+  id 'org.jmailen.kotlinter' version '3.2.0' // Lint for Kotlin
+  id 'org.jetbrains.dokka' version '1.4.10.2' // Documentation generator
   id 'maven-publish' // Packaging and uploading JARs with POMs
   id 'com.jfrog.bintray' version '1.8.5' // Uploading to JCenter
   id 'com.github.dcendents.android-maven' version '2.1' // Packaging resources into JARs
@@ -18,13 +18,13 @@ ext {
   kotlinSourceDir = 'src/main/kotlin'
   resourcesDir = 'src/main/resources'
 
-  projectVersion = '1.0.3'
+  projectVersion = '1.1.0'
   projectGroup = 'me.angrybyte'
 
   VERSION_NAME = projectVersion // Needed for 'bintrayUpload' task
   GROUP = projectGroup // Needed for 'bintrayUpload' task
 
-  coroutines_version = "1.3.7"
+  coroutines_version = "1.4.0"
 }
 
 // Directory configuration
@@ -50,13 +50,15 @@ dependencies {
   api "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
   api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
 
-  testImplementation "org.junit.jupiter:junit-jupiter:5.6.2"
+  testImplementation "org.junit.jupiter:junit-jupiter:5.7.0"
   testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
 }
 
 // JVM bytecode config
 
+// noinspection GroovyUnusedAssignment
 sourceCompatibility = javaTargetLevel
+// noinspection GroovyUnusedAssignment
 targetCompatibility = javaTargetLevel
 
 compileKotlin {
@@ -84,14 +86,12 @@ kotlinter {
   reporters = ['checkstyle', 'plain']
   experimentalRules = false
   disabledRules = ['no-blank-line-before-rbrace', 'final-newline']
-  fileBatchSize = 30
 }
 
 // Dokka (KDoc) config
 
-dokka {
-  outputFormat = 'html'
-  outputDirectory = "$buildDir/../../docs/dokka"
+dokkaHtml.configure {
+  outputDirectory.set(file("$buildDir/../../docs"))
 }
 
 // Custom scripts

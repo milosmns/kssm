@@ -1,0 +1,9 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+me.angrybyte.kssm.api
+me.angrybyte.kssm.api.data
+me.angrybyte.kssm.dsl
+me.angrybyte.kssm.impl.action
+me.angrybyte.kssm.impl.state
+
