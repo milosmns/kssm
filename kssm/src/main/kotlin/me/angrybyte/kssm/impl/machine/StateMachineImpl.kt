@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
@@ -46,7 +45,6 @@ import me.angrybyte.kssm.impl.state.CoreState.None
  * }
  * ```
  */
-@ExperimentalCoroutinesApi
 internal class StateMachineImpl : StateMachine, CoroutineScope {
 
   // Coroutine scope setup

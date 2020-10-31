@@ -31,7 +31,7 @@ import me.angrybyte.kssm.util.shouldThrow
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
-@ExperimentalCoroutinesApi
+@ExperimentalCoroutinesApi // because of TestCoroutineDispatcher
 internal class StateMachineImplTest {
 
   companion object {
